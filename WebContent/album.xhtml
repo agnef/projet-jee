@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui"
+	>
+<h:head/>
+<f:metadata>
+    	<f:viewParam name="albId" value="#{albumController.albId}" />
+</f:metadata>
+
+<h:body>
+	<div style="width: 60%; margin:0 auto;">
+	<h1 style="padding-left: 100px;">Gestionnaire d'Albums photo</h1>
+		<h:form>
+			<p:menubar>
+				<p:menuitem value="Ajouter un album" action="add-album.xhtml" />
+				<p:menuitem value="Liste des albums" action="list-album.xhtml" />
+				<p:menuitem value="Annoter une photo" onclick="PF('dlg').show()"/>
+				<p:menuitem value="Me déconnecter" action="#{appUserSession.logout()}" />
+			</p:menubar>
+		</h:form>
+		<h1>Album #{albumController.albumName}</h1>
+		
+	    <p:galleria value="#{albumController.getListPictureOwnedByCurrentAlbum()}" var="pic" style="width:100%" panelHeight="313" showCaption="true" autoPlay="false" >
+			<p:graphicImage value="resources/photos/#{pic.fileName}" alt="Nom du fichier : #{pic.fileName}" style="height:100%;" title="#{pic.fileName}" /> 
+		</p:galleria>
+		
+		<p:dialog header="Annoter la photo" widgetVar="dlg" modal="true" height="300">
+			<h:form>	
+				<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5" columnClasses="label, value">
+				
+					<p:outputLabel for="photo" value="Photos :" />				
+	        		<p:selectOneRadio id="photo" value="#{pictureAnnotationController.currentPicture}" layout="grid" columns="2">
+						<f:selectItems value="#{albumController.getListPictureOwnedByCurrentAlbum()}" var="p" itemLabel="#{p.fileName}" itemValue="#{p.uri}" />
+					</p:selectOneRadio>
+			       	
+					<p:outputLabel for="prop" value="Propriétés :" />
+	        		<p:selectOneListbox id="prop" value="#{pictureAnnotationController.propriete}">
+			            <f:selectItem itemLabel="prise le" itemValue="pictureDate" />
+			            <f:selectItem itemLabel="représente" itemValue="hasInside" />
+			            <f:selectItem itemLabel="prise par" itemValue="isTakenBy" />
+			            <f:selectItem itemLabel="prise à" itemValue="isTakenIn" />
+			       	</p:selectOneListbox>
+			       	
+			       	<p:outputLabel for="valprop" value="Valeur :" />
+			       	<p:inputText id="valprop" value="#{pictureAnnotationController.valeurPropriete}" title="Valeur de la propriété"/>
+			       	
+			    </h:panelGrid>
+			    <p:commandButton value="Envoyer" actionListener="#{pictureAnnotationController.insertOntology}" oncomplete="PF('dlg').hide()" />
+		    </h:form>
+		</p:dialog>
+		
+		
+	</div>
+</h:body>
+
+</html>

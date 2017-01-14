@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	>
+<h:head/>
+<h:body>
+	<div style="width: 60%; margin:0 auto;">
+		<h1 style="padding-left: 100px;">Gestionnaire d'Albums photo</h1>
+		<h2>Se connecter</h2>
+		<h:form>
+			<p:messages showDetail="true" autoUpdate="true" closable="true" />
+			<h:panelGrid columns="2" cellpadding="5">
+				<p:outputLabel for="email" value="Adresse email : " />
+				<p:inputText id="email" value="#{appUserSession.email}" 
+					title="Renseignez votre email"/>
+					
+				<p:outputLabel for="password" value="Mot de passe : " />
+				<p:password id="password" value="#{appUserSession.password}" 
+					title="Donnez un mot de passe"/>
+				
+			</h:panelGrid>	
+			<p:commandButton action="#{appUserSession.login()}" value="Me connecter"/>	
+		</h:form>
+	</div>
+</h:body>
+
+</html>

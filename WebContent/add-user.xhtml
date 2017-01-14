@@ -1,0 +1,42 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<div style="width: 60%; margin: 0 auto;">
+		<h1 style="padding-left: 100px;">Gestionnaire d'Albums photo</h1>
+		<h2>S'inscrire</h2>
+		<h:form>
+			<p:messages showDetail="false" autoUpdate="true" closable="true" />
+
+			<h:panelGrid columns="2" cellpadding="5">
+
+				<p:outputLabel for="email" value="Adresse email : " />
+				<p:inputText id="email" value="#{appUserController.user.email}"
+					title="Renseignez votre email" />
+
+				<p:outputLabel for="lastname" value="Nom : " />
+				<p:inputText id="lastname"
+					value="#{appUserController.user.lastname}" title="Donnez votre nom" />
+
+				<p:outputLabel for="firstname" value="Prénom : " />
+				<p:inputText id="firstname"
+					value="#{appUserController.user.firstname}"
+					title="Donnez votre prénom" />
+
+				<p:outputLabel for="password" value="Mot de passe : " />
+				<p:password id="password" value="#{appUserController.user.password}"
+					title="Donnez un mot de passe" />
+
+			</h:panelGrid>
+			<p:commandButton action="#{appUserController.create()}"
+				value="Créer mon compte" />
+		</h:form>
+	</div>
+
+</h:body>
+
+</html>

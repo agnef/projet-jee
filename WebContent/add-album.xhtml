@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+	
+<h:head/>
+<h:body>
+	<div style="width: 60%; margin:0 auto;">
+		<h1 style="padding-left: 100px;">Gestionnaire d'Albums photo</h1>
+		<h2>Créer un album</h2>
+		
+		<h:form enctype="multipart/form-data">
+			<h:panelGrid columns="2" cellpadding="5">
+				<p:outputLabel for="titreAlbum" value="Titre de l'album : " />
+				<p:inputText id="titreAlbum" value="#{albumController.album.title}"
+					title="Renseignez le titre de l'album" />
+					
+				<p:outputLabel for="descriptionAlbum" value="Description : " />
+				<p:inputText id="descriptionAlbum"
+					value="#{albumController.album.description}"
+					title="Donnez une description de l'album" />
+			</h:panelGrid>
+				<p:commandButton action="#{albumController.createAlbum()}"
+					value="Créer l'album" />
+			
+			
+		</h:form>
+		
+	</div>
+</h:body>
+
+</html>

@@ -36,9 +36,7 @@ public class Album implements Serializable {
 	private String title;
 	
 	private String description;
-	
-	//proprio de l'album, @ManyToOne nécessaire pour dire qu'un owner peut avoir plusieurs albums
-	//et un album un seul owner
+
 	@NotNull
 	@ManyToOne(cascade = CascadeType.PERSIST)
 	private AppUser owner;

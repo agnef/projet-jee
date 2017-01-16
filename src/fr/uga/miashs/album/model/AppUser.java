@@ -2,9 +2,6 @@ package fr.uga.miashs.album.model;
 
 
 
-//ajouter pour d'autre champ, modifier VaidationMessages.properties
-//@NotNull(message="{appuser.firstname.notnull}")
-
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -20,8 +17,6 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-//@Entity devant la declaration d'une classe devient une entit� jpa, il faut au moins un attribut avec @id
-//@nameQuery query= langage jpql
 @Entity 
 @NamedQueries({
     @NamedQuery(name="AppUser.findAll",
@@ -33,9 +28,6 @@ import javax.validation.constraints.Pattern;
 @Table(uniqueConstraints=@UniqueConstraint(columnNames="email"))
 public class AppUser {
 	
-	//qd on ont veut inserer un utilistatur, la cl� primaire sera automatiquement g�n�re par la bd
-	// on prefere long pour une cl� primaire
-	//constructeur public sans param
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;

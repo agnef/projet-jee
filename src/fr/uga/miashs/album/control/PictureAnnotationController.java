@@ -23,6 +23,7 @@ public class PictureAnnotationController implements Serializable {
 	private String currentPicture;
 	private String propriete;
 	private String valeurPropriete;
+	private String pictureUri;
 	
 	private String requete;
 	
@@ -36,6 +37,14 @@ public class PictureAnnotationController implements Serializable {
 		return currentPicture;
 	}
 	
+	public String getPictureUri() {
+		return pictureUri;
+	}
+
+	public void setPictureUri(String pictureUri) {
+		this.pictureUri = pictureUri;
+	}
+
 	public void setCurrentPicture(String picture){
 		this.currentPicture = picture;
 		System.out.println("set current picture = current picture " + picture);
@@ -50,7 +59,6 @@ public class PictureAnnotationController implements Serializable {
 	}
 
 	public String getPropriete() {
-		System.out.println("get propriété : " + propriete);
 		return propriete;
 	}
 
@@ -83,17 +91,42 @@ public class PictureAnnotationController implements Serializable {
 	}
 	
 	public void insertOntology(){
-//		if(propriete.equals("date")){
-//			valeurPropriete = valeurPropriete + "T00:00:00";
-//		}
+		System.out.println("premiere" + valeurPropriete);
+		if(propriete.equals("pictureDate")){
+			valeurPropriete = valeurPropriete + "T00:00:00";
+		}
+		System.out.println("modif" + valeurPropriete);
 		
 		pictureAnnotationService.insertOntology(currentPicture, propriete, valeurPropriete);
 	}
 	
-	public List<String> seeAnnotations(String uri){
-		List<String> annotations = pictureAnnotationService.seeAnnotations(uri); 
-		return annotations;
-	}
+	 public List<String> seeAnnotations(){
+	        System.out.println("ANNOTATIONS : pictureannotationcontroller");
+	        List<String> annotations = pictureAnnotationService.seeAnnotations(pictureUri);
+	        List<String> displayAnnotations = new ArrayList<String>();
+	        for (int i=0; i<annotations.size(); i++){
+	        	if (annotations.get(i).equals("http://www.semanticweb.org/masterDCISS/projetAlbum#hasInside"))
+	        		displayAnnotations.add("représente : ");
+	        	else if (annotations.get(i).equals("http://www.semanticweb.org/masterDCISS/projetAlbum#inYear"))
+	        		displayAnnotations.add("en l'année : ");
+	        	else if(annotations.get(i).equals("http://www.semanticweb.org/masterDCISS/projetAlbum#isTakenBy"))
+	        		displayAnnotations.add("prise par : ");
+	        	else if(annotations.get(i).equals("http://www.semanticweb.org/masterDCISS/projetAlbum#isTakenIn"))
+	        		displayAnnotations.add("prise à : ");
+	        	else if(annotations.get(i).equals("http://www.semanticweb.org/masterDCISS/projetAlbum#during"))
+	        		displayAnnotations.add("pendant : ");
+	        	else if(annotations.get(i).equals("http://www.semanticweb.org/masterDCISS/projetAlbum#pictureDate"))
+	        		displayAnnotations.add("prise le : ");
+	        	else if (!annotations.get(i).equals("http://www.w3.org/1999/02/22-rdf-syntax-ns#type") &&
+	        			!annotations.get(i).equals("http://www.w3.org/2002/07/owl#Thing") &&
+	        			!annotations.get(i).equals("http://www.w3.org/2000/01/rdf-schema#Resource") )
+	        		displayAnnotations.add(annotations.get(i) + " ");
+	        	
+	        	
+	        }
+	            
+	        return displayAnnotations;
+	    }
 	
 	
 }

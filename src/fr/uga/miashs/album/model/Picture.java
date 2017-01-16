@@ -1,5 +1,4 @@
 package fr.uga.miashs.album.model;
-//besoin de rajouter hashcode, equals
 import java.net.URI;
 import java.nio.file.Path;
 

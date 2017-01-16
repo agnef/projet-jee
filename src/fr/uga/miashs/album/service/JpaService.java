@@ -14,9 +14,9 @@ import javax.persistence.PersistenceUnit;;
 
 
 /*
- * On a choisi ApplicationScoped car une seule instance de chaque service suffit Ã  l'application
+ * On a choisi ApplicationScoped car une seule instance de chaque service suffit à  l'application
  * Ce choix de reporte sur toute les sous classes
- * Si on ne met rien @RequestScoped est choisi par dÃ©faut
+ * Si on ne met rien @RequestScoped est choisi par défaut
  */
 @ApplicationScoped
 public abstract class JpaService<K,V> implements GenericService<K,V>, Serializable {
@@ -58,7 +58,7 @@ public abstract class JpaService<K,V> implements GenericService<K,V>, Serializab
 	
 	public V read(K id) {
 		return em.find(cls, id);
-//		cls= classe de l'bjet qu'on veut recuperer
+//		cls= classe de l'objet qu'on veut recuperer
 	}
 	
 	public V update(V v) {
@@ -81,8 +81,8 @@ public abstract class JpaService<K,V> implements GenericService<K,V>, Serializab
 
 		EntityTransaction t = em.getTransaction();
 		t.begin();
-		// getReference (contrairement Ã  find) permet de charger seulement l'id
-		// et non toutes les donnÃ©es de l'objet
+		// getReference (contrairement à  find) permet de charger seulement l'id
+		// et non toutes les données de l'objet
 		em.remove(em.getReference(cls, id));
 		t.commit();
 	}

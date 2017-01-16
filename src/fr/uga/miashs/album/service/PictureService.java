@@ -14,22 +14,15 @@ import fr.uga.miashs.album.model.AppUser;
 import fr.uga.miashs.album.model.Picture;
 
 public class PictureService extends JpaService<Long, Picture>{
-//	private EntityManagerFactory emf;
-//	EntityManager em = emf.createEntityManager();
 	
 	public void createP(Picture p, Album a) throws ServiceException {
-		//super.create(p);
 		
-		//p.setPictAlbum(a);
-		//super.update(p);
-		//EntityTransaction t = getEm().getTransaction();
 		getEm().getTransaction().begin();
 		getEm().persist(p);
 		getEm().getTransaction().commit();
-//		List<Picture> picturesIdToDelete = getPictureNull();
+
 		updatePicture(p, a);
-//		for(int i=0; i<picturesIdToDelete.size(); i++)
-//			deletePicture(picturesIdToDelete.get(i).getId());
+
 	}
 	
 	public void updatePicture(Picture p, Album a) {
@@ -37,7 +30,6 @@ public class PictureService extends JpaService<Long, Picture>{
 		Album alb = getAlbumById(a.getId());
 		t.begin();
 		p.setPictAlbum(alb);
-		System.out.println("update3");
 		t.commit();
 	}
 	
@@ -61,7 +53,6 @@ public class PictureService extends JpaService<Long, Picture>{
 	public Album getAlbumById(long albumId){
 		Query query = getEm().createQuery("SELECT a FROM Album a WHERE a.id="+albumId);
 		Album a =(Album) query.getSingleResult();
-		System.out.println("id de a 2 : "+a.getId());
 		return a;
 	}
 	

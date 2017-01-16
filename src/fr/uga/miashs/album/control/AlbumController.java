@@ -158,7 +158,6 @@ public class AlbumController implements Serializable {
 		try {
 			long id = Long.parseLong(albId);
 			List<Picture> allPictures = pictureService.listPictureOwnedBy(id);
-			//System.out.println("id de l'alb courant" + alb.getId());
 			List<Picture> pictures = new ArrayList<Picture>();
 			for(int i=0; i<allPictures.size(); i++){
 				pictures.add(allPictures.get(i));

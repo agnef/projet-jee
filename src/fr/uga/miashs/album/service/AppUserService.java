@@ -23,7 +23,7 @@ public class AppUserService extends JpaService<Long,AppUser> {
 			super.create(v);
 		}
 		catch (RollbackException e) {
-			//la transaction peut etre annulée si l'email existe deja ds la bd
+			//la transaction peut etre annulée si l'email existe deja dans la base de données
 			if (e.getCause() instanceof EntityExistsException) {
 				throw new ServiceException("Un utilisateur avec l'email "+v.getEmail()+" existe deja ",e);
 			}
@@ -35,13 +35,12 @@ public class AppUserService extends JpaService<Long,AppUser> {
 	}
 
 	public AppUser login(String email, String password) throws ServiceException {
-		// a un mot de passe, on veut recuperer l'instance de 'utilisateur qui a ce password
+		//on veut recuperer l'instance de l'utilisateur qui a ce password
 		Query query = getEm().createNamedQuery("AppUser.login");
 		query.setParameter("email", email);
 		query.setParameter("password", password);
 		try {
 			return (AppUser) query.getSingleResult();
-			//query.getResultList() si plusiuers res
 			
 		}
 		catch (NoResultException e) {

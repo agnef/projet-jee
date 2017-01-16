@@ -78,12 +78,13 @@ public class PictureAnnotationService extends JpaService<Long,Picture>{
 	public Query query1(){
 		//Photos prises entre le 21 juin et le 11 novembre 2015.
 		Query query = QueryFactory
-				.create("PREFIX pa: <http://www.semanticweb.org/masterDCISS/projetAlbum#>"
+				.create("PREFIX pa: <http://www.semanticweb.org/masterDCISS/projetAlbum#> "
+						+ "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>"
 						+ "SELECT ?s  WHERE {"
-							+ "?s a pa:Picture;"
+							+ "{?s a pa:Picture;"
 							+ "pa:pictureDate ?date. "
-							+ "FILTER ( ?date > \"2015-06-21T00:00:00\"¨¨xsd:dateTime && "
-							+ "?date < \"2015-11-11\"¨¨xsd:dateTime)."
+							+ "FILTER ( ?date > \"2015-06-21T00:00:00\"^^xsd:dateTime && "
+							+ "?date < \"2015-11-11T00:00:00\"^^xsd:dateTime)."
 							+ "}UNION"
 							+ "{?s a pa:Picture;"
 							+ "pa:inYear 2015;"
@@ -93,7 +94,7 @@ public class PictureAnnotationService extends JpaService<Long,Picture>{
 	}
 	
 	public Query query2(){
-		//Photos contenant les amis de Marc Lebeau qui sont aussi des utilisateurs (triées par année).
+		//Photos contenant les amis de Marc Lebeau qui sont aussi des utilisateurs (triÃ©es par annÃ©e).
 		Query query = QueryFactory
 				.create("PREFIX pa: <http://www.semanticweb.org/masterDCISS/projetAlbum#>"
 						+ "SELECT DISTINCT ?s  WHERE {"
@@ -133,23 +134,21 @@ public class PictureAnnotationService extends JpaService<Long,Picture>{
 	}
 	
 	public Query query5(){
-		// Toute les photos à Paris
+		// Toute les photos Ã  Paris
 		Query query = QueryFactory
 				.create("PREFIX dbpedia: <http://dbpedia.org/resource/>"
 						+ "PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>"
-						+ "PREFIX pa: <http://www.semanticweb.org/masterDCISS/projetAlbum#>"
-						+ "SELECT DISTINCT ?s"
-						+ "WHERE {"
-						+ "{"
-						+ " ?s a pa:Picture. {"
-						+ "    ?s pa:hasInside dbpedia:Paris.}"
-						+ "  UNION {"
-						+ " ?s pa:isTakenIn dbpedia:Paris.}"
-						+ " } UNION  {"
+						+ "PREFIX pa: <http://www.semanticweb.org/masterDCISS/projetAlbum#>" 
+						+ "SELECT DISTINCT ?s WHERE {" 
+						+ " {?s a pa:Picture. " 
+						+ "{?s pa:hasInside dbpedia:Paris." 
+						+ "}UNION"
+						+ "{?s pa:isTakenIn dbpedia:Paris.}" 
+						+ "}UNION{" 
 						+ "?s a pa:Picture ;"
-						+ "   pa:hasInside ?something."
+						+ "pa:hasInside ?something." 
 						+ "SERVICE <http://dbpedia.org/sparql> {"
-						+ " ?something dbpedia-owl:location dbpedia:Paris. }"
+						+ "?something dbpedia-owl:location dbpedia:Paris.}" 
 						+ " }}");
 		return query;
 	}
@@ -182,28 +181,31 @@ public class PictureAnnotationService extends JpaService<Long,Picture>{
 // insertion dans ontologie
 	
 	public List<String> seeAnnotations(String uri){
-		List<String> annotations = new ArrayList<String>();
-		Query query = QueryFactory
-				.create("PREFIX pa: <http://www.semanticweb.org/masterDCISS/projetAlbum#>"
-						+ "SELECT ?s ?p ?o WHERE {"
-							+ "?s a pa:Picture;"
-							+ " .}");
-		try (QueryExecution qexec = QueryExecutionFactory.sparqlService("http://localhost:3030/ALBUM/sparql", query)) {		
-			ResultSet results = qexec.execSelect();
-			
-			for (; results.hasNext();) {
-				QuerySolution soln = results.nextSolution();
-				RDFNode x = soln.get("s"); //on recupere la photo
-				Resource r = soln.getResource("p"); // une proppriete
-				Literal l = soln.getLiteral("o"); // valeur de la propriete
-				System.out.println(x + " ");
-				annotations.add(r.toString());
-				annotations.add(l.toString());
-			}
-		}
-		// query doit obtenir toutes les propriétés et les valeurs de la propriete de l'uri passée en paramètres
-		return annotations;
-	}
+        System.out.println("pic annotation service : seeAnnotations");
+        List<String> annotations = new ArrayList<String>();
+        Query query = QueryFactory
+                .create( "SELECT ?p ?o WHERE {"
+                            + "<" + uri + ">"
+                            + "?p ?o"
+                            + " .}");
+        try (QueryExecution qexec = QueryExecutionFactory.sparqlService("http://localhost:3030/ALBUM/sparql", query)) {       
+            ResultSet results = qexec.execSelect();
+           
+            for (; results.hasNext();) {
+                QuerySolution soln = results.nextSolution();
+                RDFNode x = soln.get("s"); //on recupere la photo;
+                Resource r = soln.getResource("p"); // une proppriete
+                RDFNode l = soln.get("o"); // valeur de la propriete
+                System.out.println(x + " " + r + " " + l);
+                    annotations.add(r.toString());
+                    annotations.add(l.toString());   
+            }
+            System.out.println("URI : " + uri);
+
+        }
+        // query doit obtenir toutes les propriÃ©tÃ©s et les valeurs de la propriete de l'uri passÃ©e en paramÃ¨tres
+        return annotations;
+    }
 	
 	public void insertPictureOntology(String uri){		
 		
@@ -232,18 +234,5 @@ public class PictureAnnotationService extends JpaService<Long,Picture>{
 		
 	}
 	
-
-//	public static void main(String[] args) {
-//
-//		// SPARQL Update
-//		UpdateRequest request = UpdateFactory.create("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>"
-//				+ "INSERT DATA {"
-//				+ " <http://imss.univ-grenoble-alpes.fr/ns/album#Selfie> rdfs:subClassOf <http://imss.univ-grenoble-alpes.fr/ns/album#Picture> ."
-//				+ " <http://imss.univ-grenoble-alpes.fr/ns/album#picture321> a <http://imss.univ-grenoble-alpes.fr/ns/album#Selfie> .}");
-//
-//		UpdateProcessor up = UpdateExecutionFactory.createRemote(request, "http://localhost:3030/ALBUM/update");
-//		up.execute();
-//
-//	}
 
 }

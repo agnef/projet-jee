@@ -24,9 +24,16 @@
 		</h:form>
 		<h1>Album #{albumController.albumName}</h1>
 		
-	    <p:galleria value="#{albumController.getListPictureOwnedByCurrentAlbum()}" var="pic" style="width:100%" panelHeight="313" showCaption="true" autoPlay="false" >
-			<p:graphicImage value="resources/photos/#{pic.fileName}" alt="Nom du fichier : #{pic.fileName}" style="height:100%;" title="#{pic.fileName}" /> 
-		</p:galleria>
+	      <h:form>
+            <p:galleria value="#{albumController.getListPictureOwnedByCurrentAlbum()}" var="pic" style="width:100%" panelHeight="313" showCaption="true" autoPlay="false" >
+               
+                <p:graphicImage value="resources/photos/#{pic.fileName}" alt="Nom du fichier : #{pic.fileName}" style="height:100%;" title="#{pic.fileName}" />
+                <p:link outcome="list-annotations" value="Consulter les annotations de la photo #{pic.fileName}">
+                    <f:param name="pictureUri" value="#{pic.uri}"/>
+                </p:link>
+                           
+            </p:galleria>
+        </h:form>
 		
 		<p:dialog header="Annoter la photo" widgetVar="dlg" modal="true" height="300">
 			<h:form>	
@@ -40,7 +47,7 @@
 					<p:outputLabel for="prop" value="Propriétés :" />
 	        		<p:selectOneListbox id="prop" value="#{pictureAnnotationController.propriete}">
 			            <f:selectItem itemLabel="prise le" itemValue="pictureDate" />
-			            <f:selectItem itemLabel="pendent" itemValue="during" />
+			            <f:selectItem itemLabel="pendant" itemValue="during" />
 			            <f:selectItem itemLabel="dans l'année" itemValue="inYear" />
 			            <f:selectItem itemLabel="représente" itemValue="hasInside" />
 			            <f:selectItem itemLabel="prise par" itemValue="isTakenBy" />

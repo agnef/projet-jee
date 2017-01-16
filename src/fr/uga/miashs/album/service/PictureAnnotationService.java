@@ -42,6 +42,14 @@ public class PictureAnnotationService extends JpaService<Long,Picture>{
 			query = query1();
 		} else if (requete.equals("query2")){
 			query = query2();
+		} else if (requete.equals("query3")){
+			query = query3();
+		} else if (requete.equals("query4")){
+			query = query4();
+		} else if (requete.equals("query5")){
+			query = query5();
+		} else if (requete.equals("query6")){
+			query = query6();
 		}
 		
 		List<String> uriPictures = new ArrayList<String>();
@@ -68,6 +76,7 @@ public class PictureAnnotationService extends JpaService<Long,Picture>{
 	}
 
 	public Query query1(){
+		//Photos prises entre le 21 juin et le 11 novembre 2015.
 		Query query = QueryFactory
 				.create("PREFIX pa: <http://www.semanticweb.org/masterDCISS/projetAlbum#>"
 						+ "SELECT ?s  WHERE {"
@@ -84,6 +93,7 @@ public class PictureAnnotationService extends JpaService<Long,Picture>{
 	}
 	
 	public Query query2(){
+		//Photos contenant les amis de Marc Lebeau qui sont aussi des utilisateurs (triées par année).
 		Query query = QueryFactory
 				.create("PREFIX pa: <http://www.semanticweb.org/masterDCISS/projetAlbum#>"
 						+ "SELECT DISTINCT ?s  WHERE {"
@@ -98,27 +108,74 @@ public class PictureAnnotationService extends JpaService<Long,Picture>{
 	}
 	
 	public Query query3(){
+		//Photos prises par Jeanne Dupont contenant un membre de sa famille
 		Query query = QueryFactory
 				.create("PREFIX pa: <http://www.semanticweb.org/masterDCISS/projetAlbum#>"
 						+ "SELECT DISTINCT ?s  WHERE {"
 							+ "?s a pa:Picture;"
-							+ "pa:isTakenBy pa:jeanneDupont;"
+							+ "pa:isTakenBy pa:pierreDupont;"
 							+ "pa:hasInside ?p ."
-							+ "?p pa:belongsToTheSameFamily pa:jeanneDupont. "
-							+ "}"
-							);
+							+ "?p pa:belongsToTheSameFamily pa:pierreDupont. "
+							+ "}");
 		return query;
 	}
 	
 	public Query query4(){
+		//Photos contenant des chevaux.
 		Query query = QueryFactory
 				.create("PREFIX pa: <http://www.semanticweb.org/masterDCISS/projetAlbum#>"
 						+ "SELECT DISTINCT ?s  WHERE {"
 							+ "?s a pa:Picture;"
 							+ "pa:hasInside ?p."
 							+ "?p a pa:Horse. "
-							+ "}"
-							);
+							+ "}");
+		return query;
+	}
+	
+	public Query query5(){
+		// Toute les photos à Paris
+		Query query = QueryFactory
+				.create("PREFIX dbpedia: <http://dbpedia.org/resource/>"
+						+ "PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>"
+						+ "PREFIX pa: <http://www.semanticweb.org/masterDCISS/projetAlbum#>"
+						+ "SELECT DISTINCT ?s"
+						+ "WHERE {"
+						+ "{"
+						+ " ?s a pa:Picture. {"
+						+ "    ?s pa:hasInside dbpedia:Paris.}"
+						+ "  UNION {"
+						+ " ?s pa:isTakenIn dbpedia:Paris.}"
+						+ " } UNION  {"
+						+ "?s a pa:Picture ;"
+						+ "   pa:hasInside ?something."
+						+ "SERVICE <http://dbpedia.org/sparql> {"
+						+ " ?something dbpedia-owl:location dbpedia:Paris. }"
+						+ " }}");
+		return query;
+	}
+	
+	public Query query6(){
+		// Toutes le photos dans une capitale
+		Query query = QueryFactory
+				.create("PREFIX dbpedia: <http://dbpedia.org/resource/>"
+						+ "PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>"
+						+ "PREFIX pa: <http://www.semanticweb.org/masterDCISS/projetAlbum#>"
+						+ "SELECT DISTINCT ?s "
+						+ "WHERE {"
+						+ "{?s a pa:Picture. "
+						+ "?capitale a pa:City. "
+						+ "{?s pa:hasInside ?capitale. }"
+						+ "UNION "
+						+ "{?s pa:isTakenIn ?capitale.} "
+						+ "SERVICE <http://dbpedia.org/sparql>{ "
+						+ "?pays dbpedia-owl:capital ?capitale.} "
+						+ "} UNION {"
+						+ "?s a pa:Picture. "
+						+ "?s pa:hasInside ?something. "
+						+ "SERVICE <http://dbpedia.org/sparql> { "
+						+ "?something dbpedia-owl:location ?capitale. "
+						+ "?pays dbpedia-owl:capital ?capitale. } "
+						+ "} }");
 		return query;
 	}
 	
@@ -154,25 +211,25 @@ public class PictureAnnotationService extends JpaService<Long,Picture>{
 		 "INSERT DATA { "
 		+ "<" + uri + ">" + "a" + "<http://www.semanticweb.org/masterDCISS/projetAlbum#Picture>"
 		+ " .}");
-		System.out.println("insertion dans ontologie (pictureAnnootationService)");
+		
 		UpdateProcessor up = UpdateExecutionFactory.createRemote(request, "http://localhost:3030/ALBUM/update");
 		up.execute();
 	}
 	
 	public void insertOntology(String uriStr, String propriete, String valeurPropriete){
-		
-		String subject = "<" + uriStr + ">";
-		String predicate =  propriete;
-		String object = valeurPropriete;
+		String subject = "<" + uriStr + ">";		
+		String predicate = "<http://www.semanticweb.org/masterDCISS/projetAlbum#" + propriete + ">";
+		String object = "<http://www.semanticweb.org/masterDCISS/projetAlbum#" +valeurPropriete + ">";
 		
 		
 		UpdateRequest request = UpdateFactory.create(
-		 "INSERT DATA {PREFIX pa:<http://www.semanticweb.org/masterDCISS/projetAlbum#> "
+		 "INSERT DATA { "
 		+ subject + predicate + object
 		+ " .}");
 
 		UpdateProcessor up = UpdateExecutionFactory.createRemote(request, "http://localhost:3030/ALBUM/update");
 		up.execute();
+		
 	}
 	
 

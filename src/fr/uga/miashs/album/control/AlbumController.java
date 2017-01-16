@@ -142,7 +142,7 @@ public class AlbumController implements Serializable {
 		currentAlbum.addPicture(pict);
 		createPicture(pict, currentAlbum);
 		insertPictureOntology(pict.getUri().toString());
-		 	
+		System.out.println("photo ajoutée" + urlStr);		 	
 	}
 		
 	public List<Album> getListAlbumOwnedByCurrentUser() {

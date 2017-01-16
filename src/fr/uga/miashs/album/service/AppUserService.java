@@ -25,7 +25,7 @@ public class AppUserService extends JpaService<Long,AppUser> {
 		catch (RollbackException e) {
 			//la transaction peut etre annulÈe si l'email existe deja ds la bd
 			if (e.getCause() instanceof EntityExistsException) {
-				throw new ServiceException("Un utilisateur avec l'email "+v.getEmail()+" existe d√©j√†",e);
+				throw new ServiceException("Un utilisateur avec l'email "+v.getEmail()+" existe deja†",e);
 			}
 			else {
 				throw new ServiceException(e);

@@ -40,6 +40,8 @@
 					<p:outputLabel for="prop" value="Propriétés :" />
 	        		<p:selectOneListbox id="prop" value="#{pictureAnnotationController.propriete}">
 			            <f:selectItem itemLabel="prise le" itemValue="pictureDate" />
+			            <f:selectItem itemLabel="pendent" itemValue="during" />
+			            <f:selectItem itemLabel="dans l'année" itemValue="inYear" />
 			            <f:selectItem itemLabel="représente" itemValue="hasInside" />
 			            <f:selectItem itemLabel="prise par" itemValue="isTakenBy" />
 			            <f:selectItem itemLabel="prise à" itemValue="isTakenIn" />
@@ -49,7 +51,7 @@
 			       	<p:inputText id="valprop" value="#{pictureAnnotationController.valeurPropriete}" title="Valeur de la propriété"/>
 			       	
 			    </h:panelGrid>
-			    <p:commandButton value="Envoyer" actionListener="#{pictureAnnotationController.insertOntology}" oncomplete="PF('dlg').hide()" />
+			    <p:commandButton value="Envoyer" action="#{pictureAnnotationController.insertOntology()}" oncomplete="PF('dlg').hide()" />
 		    </h:form>
 		</p:dialog>
 		

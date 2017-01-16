@@ -86,6 +86,7 @@ public class PictureAnnotationController implements Serializable {
 //		if(propriete.equals("date")){
 //			valeurPropriete = valeurPropriete + "T00:00:00";
 //		}
+		
 		pictureAnnotationService.insertOntology(currentPicture, propriete, valeurPropriete);
 	}
 	
